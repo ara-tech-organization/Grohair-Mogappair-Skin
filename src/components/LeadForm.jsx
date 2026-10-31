@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { ArrowRight, CalendarDays, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
-import { FORM } from '../config.js';
+import { useEffect, useRef, useState } from 'react';
+import { ArrowRight, Check, ChevronDown, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { FORM, SKIN_CONCERNS } from '../config.js';
 
 const PHONE_RE = /^(?:\+?91)?[6-9]\d{9}$/;
 
@@ -21,9 +21,21 @@ function encode(payload, format) {
 
 /** variant="date": name, mobile, optional date. variant="concern": name, mobile, skin concern. */
 export default function LeadForm({ variant = 'date', id, submitLabel, dark = false }) {
-  const [values, setValues] = useState({ name: '', city: '', phone: '', date: '', concern: '' });
+  const [values, setValues] = useState({ name: '', city: '', phone: '', concerns: [] });
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle'); // idle | loading | success | error
+
+  const selectConcern = (c) => { setValues((v) => ({ ...v, concerns: [c] })); setMenuOpen(false); };
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onDown = (e) => { if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false); };
+    const onKey = (e) => e.key === 'Escape' && setMenuOpen(false);
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => { document.removeEventListener('mousedown', onDown); document.removeEventListener('keydown', onKey); };
+  }, [menuOpen]);
 
   const set = (k) => (e) => setValues((v) => ({ ...v, [k]: e.target.value }));
 
@@ -32,7 +44,7 @@ export default function LeadForm({ variant = 'date', id, submitLabel, dark = fal
     if (values.name.trim().length < 2) e.name = 'Enter your full name.';
     if (values.city.trim().length < 2) e.city = 'Enter your city.';
     if (!PHONE_RE.test(values.phone.replace(/[\s-]/g, ''))) e.phone = 'Enter a valid 10-digit mobile number.';
-    if (variant === 'concern' && !values.concern.trim()) e.concern = 'Tell us your skin concern.';
+    if (variant === 'concern' && !values.concerns.length) e.concern = 'Select your skin concern.';
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -43,12 +55,12 @@ export default function LeadForm({ variant = 'date', id, submitLabel, dark = fal
     setStatus('loading');
     try {
       if (!FORM.apiUrl) throw new Error('API endpoint not configured (src/config.js).');
-      const payload = FORM.buildPayload({ ...values, name: values.name.trim(), city: values.city.trim(), phone: values.phone.replace(/[\s-]/g, '') });
+      const payload = FORM.buildPayload({ ...values, name: values.name.trim(), city: values.city.trim(), phone: values.phone.replace(/[\s-]/g, '').slice(-10) });
       const { body, headers } = encode(payload, FORM.format);
       const res = await fetch(FORM.apiUrl, { method: 'POST', headers, body });
       if (!res.ok) throw new Error(`Request failed (${res.status})`);
       window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ event: FORM.gtmEvent, form_location: variant === 'date' ? 'hero' : 'footer' });
+      window.dataLayer.push({ event: FORM.gtmEvent });
       if (FORM.thankYouPath) { window.location.assign(FORM.thankYouPath); return; }
       setStatus('success');
     } catch (err) {
@@ -79,7 +91,7 @@ export default function LeadForm({ variant = 'date', id, submitLabel, dark = fal
     <form onSubmit={onSubmit} noValidate className="space-y-4" aria-describedby={`${id}-note`}>
       <div>
         <label htmlFor={`${id}-name`} className={label}>Full name</label>
-        <input id={`${id}-name`} className={`${field} ${errors.name ? 'border-red-500' : 'border-ink/15'}`} autoComplete="name"
+        <input id={`${id}-name`} className={`${field} ${errors.name ? 'border-red-500' : 'border-ink/15'}`} autoComplete="name" placeholder="Enter your full name"
           value={values.name} onChange={set('name')} aria-invalid={!!errors.name} aria-describedby={errors.name ? `${id}-name-err` : undefined} />
         {err('name')}
       </div>
@@ -97,23 +109,29 @@ export default function LeadForm({ variant = 'date', id, submitLabel, dark = fal
           value={values.phone} onChange={set('phone')} aria-invalid={!!errors.phone} aria-describedby={errors.phone ? `${id}-phone-err` : undefined} />
         {err('phone')}
       </div>
-      {variant === 'date' ? (
-        <div>
-          <label htmlFor={`${id}-date`} className={label}>
-            <CalendarDays size={15} className="mr-1 inline -mt-0.5" aria-hidden />Preferred appointment date <span className="font-normal opacity-70">(optional)</span>
-          </label>
-          <input id={`${id}-date`} type="date" min={new Date().toISOString().split('T')[0]} className={`${field} border-ink/15`}
-            value={values.date} onChange={set('date')} />
-        </div>
-      ) : (
-        <div>
-          <label htmlFor={`${id}-concern`} className={label}>Skin concern</label>
-          <input id={`${id}-concern`} placeholder="For example: acne, pigmentation, acne scars"
-            className={`${field} ${errors.concern ? 'border-red-500' : 'border-ink/15'}`}
-            value={values.concern} onChange={set('concern')} aria-invalid={!!errors.concern} aria-describedby={errors.concern ? `${id}-concern-err` : undefined} />
-          {err('concern')}
-        </div>
-      )}
+      <div ref={menuRef} className="relative">
+        <label id={`${id}-concern-label`} className={label}>Skin concern</label>
+        <button type="button" aria-haspopup="listbox" aria-expanded={menuOpen} aria-labelledby={`${id}-concern-label`} onClick={() => setMenuOpen((o) => !o)}
+          className={`${field} flex items-center justify-between gap-2 text-left ${errors.concern ? 'border-red-500' : 'border-ink/15'}`}>
+          <span className={`truncate ${values.concerns.length ? 'text-ink' : 'text-ink/40'}`}>{values.concerns[0] || 'Select your skin concern'}</span>
+          <ChevronDown size={18} className={`shrink-0 text-ink-muted transition-transform ${menuOpen ? 'rotate-180' : ''}`} aria-hidden />
+        </button>
+        {menuOpen && (
+          <ul role="listbox" aria-labelledby={`${id}-concern-label`} className="scroll-red absolute z-20 mt-1.5 max-h-60 w-full overflow-y-auto rounded-xl border border-ink/15 bg-white py-1 shadow-soft">
+            {SKIN_CONCERNS.map((c) => {
+              const on = values.concerns[0] === c;
+              return (
+                <li key={c} role="option" aria-selected={on}>
+                  <button type="button" onClick={() => selectConcern(c)} className={`flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left hover:bg-blush-50 ${on ? 'font-medium text-crimson-700' : 'text-ink'}`}>
+                    {c}{on && <Check size={16} aria-hidden />}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+        {err('concern')}
+      </div>
       <button type="submit" disabled={status === 'loading'}
         className={`group flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3.5 font-medium transition disabled:opacity-70 ${dark ? 'bg-white text-crimson-800 hover:bg-blush' : 'grad-crimson text-white shadow-glow hover:brightness-110'}`}>
         {status === 'loading' ? (<><Loader2 className="animate-spin" size={18} aria-hidden /> Sending…</>) : (<>{submitLabel}<ArrowRight size={18} className="transition-transform group-hover:translate-x-1" aria-hidden /></>)}

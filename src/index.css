@@ -25,3 +25,9 @@ h1, h2, h3 { @apply font-display tracking-tight; }
   .strand { animation: none; stroke-dashoffset: 0; }
   .rise, .sheet { animation: none; opacity: 1; transform: none; }
 }
+
+/* Thin red scrollbar for dropdown lists */
+.scroll-red { scrollbar-width: thin; scrollbar-color: #D71920 transparent; }
+.scroll-red::-webkit-scrollbar { width: 5px; }
+.scroll-red::-webkit-scrollbar-track { background: transparent; }
+.scroll-red::-webkit-scrollbar-thumb { background: #D71920; border-radius: 9999px; }

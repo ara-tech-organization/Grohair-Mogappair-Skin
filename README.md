@@ -1,4 +1,4 @@
-# Kovilambakkam Hair Landing Page (React + Vite + Tailwind + Lucide)
+# Mogappair Hair Landing Page (React + Vite + Tailwind + Lucide)
 
 ## Run
     npm install
@@ -12,7 +12,7 @@
 4. FORM.apiUrl, FORM.format, FORM.buildPayload - copy the endpoint, request format and field names from the existing site's form.
    Until apiUrl is set, submitting shows the error state.
 5. FORM.thankYouPath - existing thank-you route (empty = inline success message).
-6. GTM-N72LR9BD is in index.html; gtmEvent in config.js should match the old site's event name.
+6. GTM-PHT532JK is in index.html; gtmEvent in config.js should match the old site's event name.
 7. vite.config.js `base` is '/hair/'; change if hosted elsewhere.
 8. Add logo and gallery photos (see src/assets/images/README.md).
 

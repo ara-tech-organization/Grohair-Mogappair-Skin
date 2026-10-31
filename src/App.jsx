@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { ArrowRight, CheckCircle2, ClipboardList, Layers, MapPin, Mail, Menu, Phone, Plus, Sparkles, Stethoscope, X } from 'lucide-react';
-import { CLINIC } from './config.js';
+import { ArrowRight, CheckCircle2, ClipboardList, Layers, MapPin, Mail, Menu, Phone, Plus, Sparkles, Star, Stethoscope, X } from 'lucide-react';
+import { CLINIC, REVIEWS } from './config.js';
 import logoUrl from './assets/logo.png';
 import LeadForm from './components/LeadForm.jsx';
 import CallPopup from './components/CallPopup.jsx';
@@ -8,11 +8,11 @@ import FormPopup from './components/FormPopup.jsx';
 import Strands from './components/Strands.jsx';
 import Gallery from './components/Gallery.jsx';
 
-const NAV = [['Treatments', '#treatments'], ['Concerns', '#concerns'], ['Process', '#process'], ['FAQ', '#faq'], ['Contact', '#contact']];
+const NAV = [['Treatments', '#treatments'], ['Concerns', '#concerns'], ['Process', '#process'], ['Reviews', '#reviews'], ['FAQ', '#faq'], ['Contact', '#contact']];
 
 // Path-based section URLs: /concerns instead of /#concerns.
 const HEADER_OFFSET = 80;
-const SECTION_IDS = ['top', 'concerns', 'treatments', 'process', 'faq', 'contact'];
+const SECTION_IDS = ['top', 'concerns', 'treatments', 'process', 'reviews', 'faq', 'contact'];
 const NAV_IDS = NAV.map(([, h]) => h.slice(1));
 let lockUntil = 0; // pause scroll-spy while a click-triggered smooth scroll runs
 
@@ -175,16 +175,16 @@ function Hero() {
     <section id="top" className="relative overflow-hidden bg-ink pt-32 text-white">
       <div className="pointer-events-none absolute -left-40 top-10 h-[34rem] w-[34rem] rounded-full bg-crimson-700/30 blur-3xl" aria-hidden />
       <div className="pointer-events-none absolute -right-32 bottom-0 h-[28rem] w-[28rem] rounded-full bg-crimson-500/20 blur-3xl" aria-hidden />
-      <div className="relative mx-auto grid max-w-6xl 2xl:max-w-7xl items-center gap-12 px-5 pb-20 pt-10 lg:grid-cols-[1.35fr_1fr] lg:pb-28 lg:pt-16">
-        <div>
+      <div className="relative mx-auto grid max-w-6xl 2xl:max-w-7xl items-start gap-12 px-5 pb-20 pt-10 lg:grid-cols-[1.35fr_1fr] lg:pb-28 lg:pt-12">
+        <div className="lg:pt-6">
           <p className="rise inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs font-medium tracking-wide text-blush-200 xs:text-sm" style={{ animationDelay: '.1s' }}>
             <MapPin size={15} className="text-crimson-500" aria-hidden /> ADVANCED SKIN CARE CLINIC
           </p>
           <h1 className="rise mt-6 text-[2rem] font-medium leading-[1.15] xs:text-4xl sm:text-5xl lg:text-[2.6rem] xl:text-[3rem] 2xl:text-[3.4rem]" style={{ animationDelay: '.25s' }}>
-            Advanced Skin Treatments in <br /><em className="grad-text pr-2">Chennai</em>
+            Advanced Skin Treatments in <br /><em className="grad-text pr-2">Mogappair</em>
           </h1>
           <p className="rise mt-6 max-w-xl text-lg leading-relaxed text-blush-200/85" style={{ animationDelay: '.4s' }}>
-            Get expert skin analysis and personalized treatment options from experienced skin specialists at Advanced GroHair &amp; GloSkin, Kovilambakkam, for healthier, clearer and glowing skin.
+            Get expert skin analysis and personalized treatment options from experienced skin specialists at Advanced GroHair &amp; GloSkin, Mogappair, for healthier, clearer and glowing skin.
           </p>
           <ul className="rise mt-9 space-y-3" style={{ animationDelay: '.55s' }}>
             {['Acne & Acne Scar Treatment', 'Pigmentation & Skin Brightening', 'Hydra Facial, Laser & Anti-Ageing'].map((t) => (
@@ -212,9 +212,9 @@ function Concerns() {
   return (
     <section id="concerns" className="mx-auto grid max-w-6xl 2xl:max-w-7xl gap-14 px-4 py-16 xs:px-5 sm:py-24 lg:grid-cols-[1fr_1.4fr]">
       <div className="lg:sticky lg:top-28 lg:self-start">
-        <Heading eyebrow="Concerns">Looking for skin treatment in Kovilambakkam, Chennai?</Heading>
+        <Heading eyebrow="Concerns">Looking for skin treatment in Mogappair, Chennai?</Heading>
         <p className="mt-6 max-w-md leading-relaxed text-ink-body">At Advanced GroHair &amp; GloSkin, every treatment starts with a proper skin analysis, not a one-size-fits-all fix. From acne and acne scars to pigmentation and ageing concerns, explore available treatments based on your individual requirements.</p>
-        <p className="mt-4 max-w-md leading-relaxed text-ink-body">Visit our Kovilambakkam clinic to discuss your concerns and understand the treatment options that may be suitable for you.</p>
+        <p className="mt-4 max-w-md leading-relaxed text-ink-body">Visit our Mogappair clinic to discuss your concerns and understand the treatment options that may be suitable for you.</p>
         <a href="#book" className={`${btnSolid} mt-8`}>Enquire Now <ArrowRight size={18} aria-hidden /></a>
       </div>
       <div>
@@ -270,7 +270,7 @@ function Why() {
         <div className="grad-crimson relative overflow-hidden rounded-[1.75rem] p-7 text-white shadow-glow sm:p-10 lg:sticky lg:top-28 lg:self-start lg:p-12">
           <Strands className="pointer-events-none absolute inset-0 h-full w-full opacity-25" />
           <p className="relative text-xs font-medium uppercase tracking-[0.22em] text-white/80">Why Choose Us?</p>
-          <h2 className="relative mt-4 font-poppins text-[1.7rem] font-medium leading-tight xs:text-3xl sm:text-4xl">Expert Skin Care, Rooted in Kovilambakkam</h2>
+          <h2 className="relative mt-4 font-poppins text-[1.7rem] font-medium leading-tight xs:text-3xl sm:text-4xl">Expert Skin Care, Rooted in Mogappair</h2>
           <span className="relative mt-8 block h-1 w-16 rounded-full bg-white" aria-hidden />
         </div>
 
@@ -309,6 +309,24 @@ function Process() {
             </li>
           ))}
         </ol>
+      </div>
+    </section>
+  );
+}
+
+function Reviews() {
+  return (
+    <section id="reviews" className="mx-auto max-w-6xl 2xl:max-w-7xl px-4 py-16 xs:px-5 sm:py-24">
+      <Heading eyebrow="Patient Reviews" className="max-w-2xl">What Our Patients Say</Heading>
+      <p className="mt-4 flex items-center gap-2 text-ink-body"><Star size={18} className="fill-crimson-600 text-crimson-600" aria-hidden /><strong className="text-ink">4.8</strong> Google rated</p>
+      <div className="mt-10 grid gap-5 sm:grid-cols-2">
+        {REVIEWS.map((r) => (
+          <figure key={r.name} className="rounded-3xl border border-line bg-white p-6">
+            <div className="flex gap-0.5" aria-label="5 out of 5 stars">{[0, 1, 2, 3, 4].map((i) => <Star key={i} size={16} className="fill-crimson-600 text-crimson-600" aria-hidden />)}</div>
+            <blockquote className="mt-3 leading-relaxed text-ink-body">&ldquo;{r.text}&rdquo;</blockquote>
+            <figcaption className="mt-4 text-sm"><span className="font-medium text-ink">{r.name}</span> <span className="text-ink-muted">· {r.tag}</span></figcaption>
+          </figure>
+        ))}
       </div>
     </section>
   );
@@ -373,6 +391,11 @@ function Footer() {
           {CLINIC.privacyUrl && <a href={CLINIC.privacyUrl} className="transition hover:underline">Privacy policy</a>}
         </nav>
       </div>
+      {CLINIC.mapEmbedUrl && (
+        <div className="mx-auto mt-10 max-w-6xl 2xl:max-w-7xl px-4 xs:px-5">
+          <iframe title={`${CLINIC.name} location map`} src={CLINIC.mapEmbedUrl} loading="lazy" referrerPolicy="no-referrer-when-downgrade" className="h-64 w-full rounded-2xl border-0 sm:h-72" allowFullScreen />
+        </div>
+      )}
       <p className="mx-auto mt-10 max-w-6xl 2xl:max-w-7xl border-t border-white/10 px-4 pt-6 xs:px-5 text-sm text-white">© {new Date().getFullYear()} {CLINIC.name}. All rights reserved.</p>
     </footer>
   );
@@ -389,6 +412,7 @@ export default function App() {
         <Why />
         <Gallery />
         <Process />
+        <Reviews />
         <Faq />
         <FinalCta />
       </main>
