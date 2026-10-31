@@ -14,7 +14,7 @@ export default function FormPopup() {
     return () => clearTimeout(t);
   }, []);
 
-  const close = () => { sessionStorage.setItem(KEY, '1'); setOpen(false); };
+  const close = () => { sessionStorage.setItem(KEY, '1'); setOpen(false); window.dispatchEvent(new Event('formpopupclosed')); };
 
   useEffect(() => {
     if (!open) return;

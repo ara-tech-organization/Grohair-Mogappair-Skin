@@ -7,6 +7,7 @@ import CallPopup from './components/CallPopup.jsx';
 import FormPopup from './components/FormPopup.jsx';
 import Strands from './components/Strands.jsx';
 import Gallery from './components/Gallery.jsx';
+import StickyCta from './components/StickyCta.jsx';
 
 const NAV = [['Treatments', '#treatments'], ['Concerns', '#concerns'], ['Process', '#process'], ['Reviews', '#reviews'], ['FAQ', '#faq'], ['Contact', '#contact']];
 
@@ -172,11 +173,11 @@ function Header() {
 
 function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden bg-ink pt-32 text-white">
+    <section id="top" className="relative overflow-hidden bg-ink pt-20 text-white">
       <div className="pointer-events-none absolute -left-40 top-10 h-[34rem] w-[34rem] rounded-full bg-crimson-700/30 blur-3xl" aria-hidden />
       <div className="pointer-events-none absolute -right-32 bottom-0 h-[28rem] w-[28rem] rounded-full bg-crimson-500/20 blur-3xl" aria-hidden />
-      <div className="relative mx-auto grid max-w-6xl 2xl:max-w-7xl items-start gap-12 px-5 pb-20 pt-10 lg:grid-cols-[1.35fr_1fr] lg:pb-28 lg:pt-12">
-        <div className="lg:pt-6">
+      <div className="relative mx-auto grid max-w-6xl 2xl:max-w-7xl items-start gap-12 px-5 pb-20 pt-6 lg:grid-cols-[1.35fr_1fr] lg:pb-28 lg:pt-8">
+        <div>
           <p className="rise inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs font-medium tracking-wide text-blush-200 xs:text-sm" style={{ animationDelay: '.1s' }}>
             <MapPin size={15} className="text-crimson-500" aria-hidden /> ADVANCED SKIN CARE CLINIC
           </p>
@@ -372,7 +373,7 @@ function Footer() {
   const row = 'flex items-start gap-3';
   const ico = 'mt-0.5 shrink-0';
   return (
-    <footer id="contact" className="bg-ink py-12 text-white sm:py-14">
+    <footer id="contact" className="bg-ink py-12 pb-24 text-white sm:py-14 md:pb-14">
       <div className="mx-auto grid max-w-6xl 2xl:max-w-7xl gap-8 px-4 xs:px-5 sm:gap-10 md:grid-cols-[1.2fr_1.4fr_1fr]">
         <div>
           <img src={logoUrl} alt={CLINIC.name} className="h-20 w-auto rounded-xl bg-white p-1.5" />
@@ -419,6 +420,7 @@ export default function App() {
       <Footer />
       <FormPopup />
       <CallPopup />
+      <StickyCta />
     </>
   );
 }

@@ -7,21 +7,20 @@ const OFFER_SECONDS = 10 * 60;
 
 const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
 
-/** Centered call modal, once per session. Waits while another popup is open. Hidden until a phone number is configured. */
+/** Centered call modal, once per session, 5s after the form popup closes. Hidden until a phone number is configured. */
 export default function CallPopup() {
   const [open, setOpen] = useState(false);
   const [left, setLeft] = useState(OFFER_SECONDS);
 
   useEffect(() => {
     if (!CLINIC.phone || sessionStorage.getItem(KEY)) return;
-    let id;
-    const t = setTimeout(() => {
-      id = setInterval(() => {
-        if (document.querySelector('[data-popup]')) return;
-        clearInterval(id); setOpen(true);
-      }, 1000);
-    }, 12000);
-    return () => { clearTimeout(t); clearInterval(id); };
+    let t;
+    // Show 5 seconds after the enquiry form popup is closed.
+    const schedule = () => { clearTimeout(t); t = setTimeout(() => setOpen(true), 5000); };
+    window.addEventListener('formpopupclosed', schedule);
+    // Form popup already dismissed earlier in this session: count from page load.
+    if (sessionStorage.getItem('formPopupDismissed')) schedule();
+    return () => { clearTimeout(t); window.removeEventListener('formpopupclosed', schedule); };
   }, []);
 
   const close = () => { sessionStorage.setItem(KEY, '1'); setOpen(false); };
